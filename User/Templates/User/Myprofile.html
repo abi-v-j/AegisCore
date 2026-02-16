@@ -1,0 +1,137 @@
+{% extends 'User/Header.html' %}
+{% block content %}
+
+<style>
+    .profile-wrapper{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        min-height:75vh;
+        padding:40px 20px;
+    }
+
+    .profile-card{
+        background:#fff;
+        border-radius:16px;
+        box-shadow:0 15px 35px rgba(0,0,0,0.08);
+        padding:40px;
+        width:100%;
+        max-width:520px;
+        text-align:center;
+    }
+
+    .profile-photo{
+        width:130px;
+        height:130px;
+        border-radius:50%;
+        /* object-fit:cover; */
+        border:4px solid #4f46e5;
+        margin-bottom:18px;
+    }
+
+    .profile-name{
+        font-size:22px;
+        font-weight:600;
+        margin-bottom:20px;
+        color:#333;
+    }
+
+    .profile-info{
+        text-align:left;
+        margin-top:20px;
+    }
+
+    .info-row{
+        display:flex;
+        justify-content:space-between;
+        padding:10px 0;
+        border-bottom:1px solid #eee;
+        font-size:15px;
+        color: black;
+    }
+
+    .info-row span:first-child{
+        font-weight:500;
+        color:#555;
+    }
+
+    .action-buttons{
+        margin-top:25px;
+        display:flex;
+        gap:12px;
+        justify-content:center;
+    }
+
+    .btn{
+        padding:10px 18px;
+        border-radius:6px;
+        text-decoration:none;
+        font-size:14px;
+        font-weight:500;
+        transition:0.2s;
+    }
+
+    .btn-edit{
+        background:#4f46e5;
+        color:white;
+    }
+
+    .btn-edit:hover{
+        background:#4338ca;
+    }
+
+    .btn-pass{
+        background:#eee;
+        color:#333;
+    }
+
+    .btn-pass:hover{
+        background:#ddd;
+    }
+</style>
+
+<div class="profile-wrapper">
+    <div class="profile-card">
+
+        <img src="{{user.user_photo.url}}" class="profile-photo" alt="Profile Photo">
+
+        <div class="profile-name">{{user.user_name}}</div>
+
+        <div class="profile-info">
+            <div class="info-row">
+                <span>Email</span>
+                <span>{{user.user_email}}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Contact</span>
+                <span>{{user.user_contact}}</span>
+            </div>
+
+            <div class="info-row">
+                <span>District</span>
+                <span>{{user.place.district.district_name}}</span>
+            </div>
+
+            <div class="info-row">
+                <span>Place</span>
+                <span>{{user.place.place_name}}</span>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{% url 'User:EditProfile' %}" class="btn btn-edit">Edit Profile</a>
+            <a href="{% url 'User:changepassword' %}" class="btn btn-pass">Change Password</a>
+        </div>
+
+    </div>
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}");
+    window.location="{% url 'User:changepassword' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

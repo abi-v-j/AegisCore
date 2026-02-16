@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup</title>
+
+<style>
+    body{
+        margin:0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg,#dbeafe,#bfdbfe);
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:30px 0;
+    }
+
+    form{
+        background:white;
+        padding:35px 45px;
+        border-radius:14px;
+        box-shadow:0 12px 30px rgba(0,0,0,0.15);
+        width:420px;
+    }
+
+    h2{
+        text-align:center;
+        margin-bottom:25px;
+        color:#333;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    td{
+        padding:8px 0;
+        font-size:14px;
+        color:#444;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="file"],
+    select,
+    textarea{
+        width:100%;
+        padding:10px;
+        border:1px solid #ccc;
+        border-radius:6px;
+        outline:none;
+        transition:0.3s;
+        font-size:14px;
+        box-sizing:border-box;
+    }
+
+    textarea{
+        resize:none;
+        height:70px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+        border-color:#60a5fa;
+        box-shadow:0 0 5px rgba(96,165,250,0.4);
+    }
+
+    .radio-group{
+        display:flex;
+        gap:15px;
+        padding-top:6px;
+    }
+
+    .btn-row{
+        text-align:center;
+        padding-top:15px;
+    }
+
+    .btn{
+        padding:12px 20px;
+        border:none;
+        border-radius:6px;
+        font-size:15px;
+        cursor:pointer;
+        transition:0.3s;
+        margin:5px;
+    }
+
+    .submit-btn{
+        background:#60a5fa;
+        color:white;
+    }
+
+    .submit-btn:hover{
+        background:#3b82f6;
+    }
+
+    .cancel-btn{
+        background:#eee;
+        color:#444;
+    }
+
+    .cancel-btn:hover{
+        background:#ddd;
+    }
+</style>
+</head>
+
+<body>
+
+<form action="" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<h2>User Registration</h2>
+
+<table>
+
+<tr>
+<td>Name</td>
+<td><input type="text" name="text_name"></td>
+</tr>
+
+<tr>
+<td>Email</td>
+<td><input type="text" name="text_email"></td>
+</tr>
+
+<tr>
+<td>Contact</td>
+<td><input type="text" name="text_number"></td>
+</tr>
+
+<tr>
+<td>Address</td>
+<td><textarea name="text_address"></textarea></td>
+</tr>
+
+<tr>
+<td>Gender</td>
+<td class="radio-group">
+<label><input type="radio" name="gender" value="Male"> Male</label>
+<label><input type="radio" name="gender" value="Female"> Female</label>
+</td>
+</tr>
+
+<tr>
+<td>DOB</td>
+<td><input type="date" name="txt_dob"></td>
+</tr>
+
+<tr>
+<td>District</td>
+<td>
+<select name="sel_district" id="sel_district">
+<option>--select District--</option>
+{% for i in dis %}
+<option value="{{i.id}}">{{i.district_name}}</option>
+{% endfor %}
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Place</td>
+<td>
+<select name="sel_place" id="sel_place">
+<option>--select Place--</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td>Photo</td>
+<td><input type="file" name="file_photo"></td>
+</tr>
+
+<tr>
+<td>Password</td>
+<td><input type="text" name="text_password"></td>
+</tr>
+
+<tr>
+<td colspan="2" class="btn-row">
+<input type="submit" value="Sign up" class="btn submit-btn">
+<input type="reset" value="Cancel" class="btn cancel-btn">
+</td>
+</tr>
+
+</table>
+</form>
+
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+$("#sel_district").change(function () {
+    var did = $(this).val();
+    var ur = "{% url 'Guest:Ajaxplace' %}"
+    $.ajax({
+        url: ur,
+        data: { did: did },
+        success: function (data) {
+            $("#sel_place").html(data);
+        },
+    });
+});
+</script>

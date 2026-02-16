@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Page - Modern Analytics Dashboard</title>
+    <link rel="stylesheet" href="{% static 'Main/templatemo-graph-page.css' %}">
+<!-- 
+
+TemplateMo 602 Graph Page
+
+https://templatemo.com/tm-602-graph-page
+
+-->
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="{% url 'User:HomePage' %}" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 13h2v8H3zm4-8h2v13H7zm4-2h2v15h-2zm4 4h2v11h-2zm4-2h2v13h-2z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">AgiesCore</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'User:HomePage' %}" class="active">Home</a></li>
+                <!-- <li><a href="">About</a></li> -->
+                <li><a href="{% url 'User:Myprofile' %}">Profile</a></li>
+                <li><a href="{% url 'User:logout' %}">Logout</a></li>
+            </ul>
+            <!-- <a href="https://www.google.com/search" target="_blank" rel="noopener" title="Search">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </a> -->
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <ul class="nav-links-mobile" id="navLinksMobile">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#analytics">Analytics</a></li>
+            <li><a href="#reports">Reports</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="geometric-shapes">
+            <div class="shape shape1"></div>
+            <div class="shape shape2"></div>
+            <div class="shape shape3"></div>
+            <div class="shape shape4"></div>
+            <div class="shape shape5"></div>
+            <div class="shape shape6"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Data Analytics<br>Dashboard</h1>
+                <p>AegisCore centralizes logs,detects threats,and visualizes security events in one system.</p>
+                <!-- <a href="{% url 'Guest:Login' %}" class="cta-button">Get Started</a> -->
+            </div>
+            
+            <div class="hero-visual">
+                <div class="city-container">
+                    <div class="building building1">
+                        <div class="building-fill"></div>
+                        <div class="building-windows"></div>
+                    </div>
+                    <div class="building building2">
+                        <div class="building-fill"></div>
+                        <div class="building-windows"></div>
+                    </div>
+                    <div class="building building3">
+                        <div class="building-fill"></div>
+                        <div class="building-windows"></div>
+                    </div>
+                    <div class="building building4">
+                        <div class="building-fill"></div>
+                        <div class="building-windows"></div>
+                    </div>
+                    <div class="neon-line neon-line1"></div>
+                    <div class="neon-line neon-line2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p class="copyright">© 2026 Graph Page. All rights reserved. Transforming data into insights. 
+            | Designed by <a href="https://templatemo.com" rel="nofollow noopener" target="_blank">TemplateMo</a></p>
+        </div>
+    </footer>
+
+<script src="{% static 'Main/templatemo-graph-script.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends 'Admin/Header.html' %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SIEM Alerts</title>
+</head>
+<body>
+  <h2>SIEM Alerts</h2>
+
+  <p><a href="{% url 'Admin:siem_dashboard' %}">Dashboard</a></p>
+
+  <table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+      <th>Time</th>
+      <th>Status</th>
+      <th>Severity</th>
+      <th>Title</th>
+      <th>Actor</th>
+      <th>IP</th>
+      <th>Action</th>
+    </tr>
+
+    {% for a in alerts %}
+    <tr>
+      <td>{{ a.created_at }}</td>
+      <td>{{ a.status }}</td>
+      <td>{{ a.severity }}</td>
+      <td>{{ a.title }}</td>
+      <td>{{ a.actor }}</td>
+      <td>{{ a.src_ip }}</td>
+      <td>
+        {% if a.status != "ACK" %}
+          <a href="{% url 'Admin:siem_ack' a.id %}">Acknowledge</a>
+        {% else %}
+          ACKED
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
+
+{% endblock content %}

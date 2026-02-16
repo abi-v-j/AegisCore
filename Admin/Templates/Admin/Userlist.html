@@ -1,0 +1,81 @@
+{% extends 'Admin/Header.html' %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="col">
+            <h4 class="text-primary">Registered Users</h4>
+        </div>
+    </div>
+
+    <!-- User Table Card -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Contact</th>
+                                    <th>Address</th>
+                                    <th>Gender</th>
+                                    <th>DOB</th>
+                                    <th>Photo</th>
+                                    <th>District</th>
+                                    <th>Place</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for i in Userlist %}
+                                <tr>
+                                    <td class="text-center">{{forloop.counter}}</td>
+                                    <td>{{i.user_name}}</td>
+                                    <td>{{i.user_email}}</td>
+                                    <td>{{i.user_contact}}</td>
+                                    <td>{{i.user_address}}</td>
+                                    <td class="text-center">{{i.user_gender}}</td>
+                                    <td class="text-center">{{i.user_dob}}</td>
+                                    <td class="text-center">
+                                        <img src="{{i.user_photo.url}}"
+                                             class="rounded"
+                                             width="70"
+                                             height="70"
+                                             style="object-fit:cover;">
+                                    </td>
+                                    <td>{{i.place.district.district_name}}</td>
+                                    <td>{{i.place.place_name}}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="10" class="text-center text-muted">
+                                        No users registered yet
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+   alert("{{msg}}")
+   window.location="{% url 'Admin:AdminRegistration' %}"
+</script>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends 'Admin/Header.html' %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Acknowledge Alert</title>
+</head>
+<body>
+  <h2>Acknowledge Alert</h2>
+
+  <p><b>{{ alert.title }}</b></p>
+  <p>Status: {{ alert.status }} | Severity: {{ alert.severity }}</p>
+  <p>Actor: {{ alert.actor }} | IP: {{ alert.src_ip }}</p>
+  <p>{{ alert.description }}</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="note" rows="5" cols="60" placeholder="Investigation note..."></textarea><br><br>
+    <button type="submit">Acknowledge</button>
+  </form>
+
+  <p><a href="{% url 'Admin:siem_alerts' %}">Back</a></p>
+</body>
+</html>
+{% endblock content %}
+''

@@ -1,0 +1,156 @@
+{% extends 'Admin/Header.html' %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>SIEM Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; padding: 16px; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px; min-width: 280px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background: #f5f5f5; text-align: left; }
+    .top { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+    select { padding: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="top">
+    <h2>AegisCore (SIEM) Dashboard</h2>
+    <div>
+      <a href="{% url 'Admin:siem_alerts' %}">View Alerts</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <h3>Summary</h3>
+      <ul>
+        <li>Total Events: <b>{{ total_events }}</b></li>
+        <li>Total Alerts: <b>{{ total_alerts }}</b></li>
+        <li>Open Alerts: <b>{{ open_alerts }}</b></li>
+      </ul>
+
+      <label>Time window:</label>
+      <select id="minutesSelect">
+        <option value="15">Last 15 minutes</option>
+        <option value="60" selected>Last 60 minutes</option>
+        <option value="180">Last 3 hours</option>
+        <option value="1440">Last 24 hours</option>
+      </select>
+    </div>
+
+    <div class="card" style="flex: 1; min-width: 360px;">
+      <h3>Events per minute</h3>
+      <canvas id="eventsChart" height="120"></canvas>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:16px;">
+    <div class="card" style="flex: 1; min-width: 360px;">
+      <h3>Top IPs (Failed Logins)</h3>
+      <table id="ipsTable">
+        <tr><th>IP</th><th>Count</th></tr>
+        {% for r in top_ips %}
+        <tr><td>{{ r.src_ip }}</td><td>{{ r.total }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No data</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="card" style="flex: 1; min-width: 360px;">
+      <h3>Top Usernames Attacked (Failed Logins)</h3>
+      <table id="usersTable">
+        <tr><th>Email/Username</th><th>Count</th></tr>
+        {% for r in top_users %}
+        <tr><td>{{ r.actor }}</td><td>{{ r.total }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No data</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+
+<script>
+  const minutesSelect = document.getElementById("minutesSelect");
+  let chart;
+
+  function setTable(tableId, rows, keyName) {
+    const table = document.getElementById(tableId);
+    // keep header row, clear the rest
+    while (table.rows.length > 1) table.deleteRow(1);
+
+    if (!rows || rows.length === 0) {
+      const tr = table.insertRow();
+      const td = tr.insertCell();
+      td.colSpan = 2;
+      td.textContent = "No data";
+      return;
+    }
+
+    rows.forEach(r => {
+      const tr = table.insertRow();
+      tr.insertCell().textContent = r[keyName] || "(unknown)";
+      tr.insertCell().textContent = r.total;
+    });
+  }
+
+  async function loadChart(minutes) {
+    const res = await fetch("{% url 'Admin:siem_events_per_minute_api' %}?minutes=" + minutes);
+    const data = await res.json();
+
+    const ctx = document.getElementById("eventsChart").getContext("2d");
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: "Events",
+          data: data.values,
+          tension: 0.25,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  async function loadTopLists(minutes) {
+    const ipsRes = await fetch("{% url 'Admin:siem_top_ips_api' %}?minutes=" + minutes);
+    const ipsData = await ipsRes.json();
+    setTable("ipsTable", ipsData.data, "src_ip");
+
+    const usersRes = await fetch("{% url 'Admin:siem_top_users_api' %}?minutes=" + minutes);
+    const usersData = await usersRes.json();
+    setTable("usersTable", usersData.data, "actor");
+  }
+
+  async function refreshAll() {
+    const minutes = minutesSelect.value;
+    await loadChart(minutes);
+    await loadTopLists(minutes);
+  }
+
+  minutesSelect.addEventListener("change", refreshAll);
+
+  // initial load
+  refreshAll();
+</script>
+
+</body>
+</html>
+{% endblock content %}

@@ -1,0 +1,142 @@
+{% extends 'Admin/Header.html' %}
+{% block content %}
+
+<style>
+.action-link{
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+    padding: 2px 4px;
+}
+
+/* Edit link */
+.edit-link{
+    color:#0d6efd;
+}
+.edit-link:hover{
+    color:#084298;
+    text-decoration: underline;
+}
+
+/* Delete link */
+.delete-link{
+    color:#dc3545;
+}
+.delete-link:hover{
+    color:#a71d2a;
+    text-decoration: underline;
+}
+</style>
+
+<div class="container-fluid">
+
+    <!-- Page Title -->
+    <div class="row mb-4">
+        <div class="col">
+            <h4 class="text-primary">Manage Places</h4>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">District</label>
+                            <select name="selname" class="form-select">
+                                <option value="">-- Select District --</option>
+                                {% for i in district %}
+                                <option value="{{i.id}}"
+                                {% if i.id == editdata.district_id %} selected {% endif %}>
+                                    {{i.district_name}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Place Name</label>
+                            <input type="text"
+                                   name="text_name"
+                                   class="form-control"
+                                   value="{{editdata.place_name}}"
+                                   placeholder="Enter place name">
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary px-4">
+                                Submit
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Place List</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>District</th>
+                                    <th>Place</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in place %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{i.district.district_name}}</td>
+                                    <td>{{i.place_name}}</td>
+                                    <td class="text-center">
+                                        <a href="{% url 'Admin:editplace' i.id %}"
+                                           class="action-link edit-link">
+                                           Edit
+                                        </a>
+                                        |
+                                        <a href="{% url 'Admin:delplace' i.id %}"
+                                           class="action-link delete-link">
+                                           Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">
+                                        No places added yet
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:Place' %}"
+</script>
+{% endif %}
+
+{% endblock content %}
